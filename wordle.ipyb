@@ -1,0 +1,44 @@
+!pip install nltk
+import nltk
+nltk.download('words')
+from nltk.corpus import words
+import random
+word_list = [word.lower() for word in words.words() if len(word) == 5 and word.isalpha()]
+secret_word = random.choice(word_list)
+attempts = 6
+
+print("🎮 Welcome to Wordle in Colab!")
+print("🟩 Correct letter & position | 🟨 Correct letter, wrong position | ⬜ Not in word")
+
+def check_guess(guess, secret):
+    result = ""
+    for i in range(5):
+        if guess[i] == secret[i]:
+            result += "🟩"
+        elif guess[i] in secret:
+            result += "🟨"
+        else:
+            result += "⬜"
+    return result
+
+while attempts > 0:
+    guess = input(f"\nAttempt {7 - attempts}/6: Enter a 5-letter word: ").lower()
+
+    if len(guess) != 5:
+        print("⚠️ Please enter exactly 5 letters.")
+        continue
+    if guess not in word_list:
+        print("❌ Not a valid English word.")
+        continue
+
+    feedback = check_guess(guess, secret_word)
+    print("Result:", feedback)
+
+    if guess == secret_word:
+        print(f"🎉 You guessed it! The word was: {secret_word}")
+        break
+
+    attempts -= 1
+
+if attempts == 0 and guess != secret_word:
+    print(f"🔚 Out of attempts. The word was: {secret_word}")
